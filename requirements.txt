@@ -1,0 +1,9 @@
+# websocket
+websockets
+
+# build
+pyinstaller
+
+# http server
+fastapi
+uvicorn

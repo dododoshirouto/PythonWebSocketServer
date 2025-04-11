@@ -1,0 +1,84 @@
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css" />
+    <link rel="stylesheet" href="https://dododoshirouto.github.io/dodo-simple.css/sample/dodo-simple.css" />
+    <style>
+        body.sender header {
+            background-color: var(--reset-button);
+        }
+
+        body.receiver header {
+            background-color: var(--submit-button);
+        }
+
+        body.sender .receive-only {
+            display: none;
+        }
+
+        body.receiver .send-only {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <h1>WebSocket Server Test</h1>
+    </header>
+
+    <div class="receive-only">
+        <code id="receive_data">
+
+        </code>
+    </div>
+
+    <div class="send-only">
+        <textarea id="send_data"></textarea>
+        <button id="send_button">送信</button>
+    </div>
+
+    <script src="https://mymp.dodoneko.site/new/scripts/ref.js"></script>
+    <script>
+        let sender = query.sender || query.send || (query.mode + '').toUpperCase() == "SENDER" || (query.mode + '').toUpperCase() == "SEND";
+
+        document.body.classList.add(sender ? "sender" : "receiver");
+
+        const ws = new WebSocket("ws://localhost:8000/ws");
+
+        ws.onopen = () => {
+            console.log("WebSocket 接続 OK");
+        };
+
+        ws.onmessage = (event) => {
+            console.log("受信:", event.data);
+            if (!sender) {
+                // 受信モードのみ表示
+                document.getElementById("receive_data").textContent = event.data;
+            }
+        };
+
+        ws.onerror = (err) => {
+            console.error("WebSocket エラー", err);
+        };
+
+        if (sender) {
+            document.getElementById("send_button").addEventListener("click", () => {
+                const text = document.getElementById("send_data").value;
+                try {
+                    const json = JSON.parse(text); // 正しいJSONかチェック
+                    ws.send(JSON.stringify(json));
+                    console.log("送信:", json);
+                } catch (e) {
+                    alert("送信データは JSON にしてな！");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
