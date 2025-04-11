@@ -8,8 +8,8 @@ Pythonで作ったテキトーなHTTP+WebSocketサーバ
 
 カレントディレクトリがHTTPサーバのルートになる
 
-http://localhost:8000
+```http://localhost:8000```
 
 WebSocketアドレス
 
-ws://localhost:8000/ws
+```ws://localhost:8000/ws```
